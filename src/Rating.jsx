@@ -1,20 +1,21 @@
 import { useState } from "react"
 
-export default function Rating({maxLength = 5}) {
+export default function Rating({maxLength = 5, onAddUserRating}) {
 
     const [rating, setRating] = useState(0);
     const [tempRating, setTempRating] = useState(0)
 
-    function handleRating(rating) {
-        setRating(rating)
+    function handleRating(userRating) {
+        setRating(userRating)
+        onAddUserRating(userRating)
     }
 
-    function handleHoverIn(rating) {
-        setTempRating(rating)
+    function handleHoverIn(userRating) {
+        setTempRating(userRating)
     }
 
-    function handleHoverOut(rating) {
-        setTempRating(rating)
+    function handleHoverOut(userRating) {
+        setTempRating(userRating)
     }
 
     return (

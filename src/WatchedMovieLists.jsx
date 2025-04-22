@@ -1,21 +1,13 @@
 import { useEffect, useState } from "react";
-import Movie from "./Movie";
+
 import { FaStar } from "react-icons/fa";
 import { GiSandsOfTime } from "react-icons/gi";
 import { MdOutlineVideoChat } from "react-icons/md";
+import WatchedMovie from "./WatchedMovie";
 
-export default function WatchedMovieLists() {
+export default function WatchedMovieLists({watchedMovieList, onDeleteList}) {
 
-    const [watchedMovieList, setWatchedMovieList] = useState([]);
     const [isOpen, setIsOpen] = useState(true)
-
-    useEffect(() => {
-
-        fetch('tempWatchedData.json')
-        .then((res) => res.json())
-        .then((data) => setWatchedMovieList(data))
-
-    }, [])
 
     return (
         <div className="bg-gray-700 h-screen p-4 rounded shadow">
@@ -34,7 +26,7 @@ export default function WatchedMovieLists() {
     
             {
             isOpen && <ul className="flex flex-col gap-3">
-                {watchedMovieList.map(movieList => <Movie key={movieList.imdbID} movieList={movieList}  />)}
+                {watchedMovieList.map(movieList => <WatchedMovie key={movieList.imdbId} movieList={movieList} onDeleteList={onDeleteList}  />)}
             </ul>
             }
     
