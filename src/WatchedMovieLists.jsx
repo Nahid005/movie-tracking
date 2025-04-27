@@ -5,7 +5,7 @@ import { GiSandsOfTime } from "react-icons/gi";
 import { MdOutlineVideoChat } from "react-icons/md";
 import WatchedMovie from "./WatchedMovie";
 
-export default function WatchedMovieLists({watchedMovieList, onDeleteList}) {
+export default function WatchedMovieLists({watchedMovieList, onDeleteList, totalImdbRating, totalUserRating, totalWatchedTime, totalWatchedMovie}) {
 
     const [isOpen, setIsOpen] = useState(true)
 
@@ -17,10 +17,10 @@ export default function WatchedMovieLists({watchedMovieList, onDeleteList}) {
             <div className="bg-gray-600 p-3 rounded-md shadow my-2">
                 <h4 className="text-white mb-2 font-bold text-xl">Movies you watched</h4>
                 <ul className="grid grid-cols-4 gap-1 text-center">
-                    <li className="flex items-center justify-center flex-col text-center text-white"><MdOutlineVideoChat /> 0 Movies</li>
-                    <li className="flex items-center justify-center flex-col text-center text-white"><FaStar /> 0.0</li>
-                    <li className="flex items-center justify-center flex-col text-center text-white"><FaStar /> 0.0</li>
-                    <li className="flex items-center justify-center flex-col text-center text-white"><GiSandsOfTime /> 0 min</li>
+                    <li className="flex items-center justify-center flex-col text-center text-white"><MdOutlineVideoChat /> {totalWatchedMovie} Movies</li>
+                    <li className="flex items-center justify-center flex-col text-center text-white"><FaStar /> {totalImdbRating}</li>
+                    <li className="flex items-center justify-center flex-col text-center text-white"><FaStar /> {totalUserRating}</li>
+                    <li className="flex items-center justify-center flex-col text-center text-white"><GiSandsOfTime /> {totalWatchedTime} min</li>
                 </ul>
             </div>
     

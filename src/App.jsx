@@ -1,64 +1,34 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import Navbar from "./Navbar";
 import Logo from "./Logo";
 import SearchBox from "./SearchBox";
 import SearchResult from "./SearchResult";
 import MovieLists from "./MovieLists";
-
 import MovieDetails from "./MovieDetails";
 import WatchedMovieLists from "./WatchedMovieLists";
 import Box from "./Box";
-import Rating from "./Rating";
 import Loading from "./Loading";
 import ErrorMessage from "./ErrorMessage";
+import useMovie from "./useMovie";
+import useLocalStorage from "./useLocalStorage";
 
 const apiKey = "77707b8f";
 
 function App() {
 
-  const [movieLists, setMovieLists] = useState([]);
   const [selectedId, setSelectedId] = useState(null);
-  const [watchedMovieList, setWatchedMovieList] = useState([]);
   const [query, setQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState("");
+  const {movieLists, isError, isLoading} = useMovie(apiKey, query);
+  const [watchedMovieList, setWatchedMovieList] = useLocalStorage([], 'watched');
 
-
-  useEffect(() => {
-    async function getMovieData() {
-      try {
-        setIsLoading(true);
-        setIsError("");
-        
-        const response = await fetch(`http://www.omdbapi.com/?s=${query}&apikey=${apiKey}`);
-        if (!response.ok) {
-          throw new Error("Network error: Failed to fetch data 💔 ");
-        }
-
-        const data = await response.json();
-        if (data.Response === "False") {
-          throw new Error("No movies found for this query 🥪 ");
-        }
-
-        setMovieLists(data.Search);
-      } catch(error) {
-        setIsError(error.message);
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    if(query.length < 3) {
-      setMovieLists([]);
-      setIsError("Search Your Favourite Movie 😻 ");
-
-      return
-    }
-
-    getMovieData();
-
-  }, [query])
+  const totalWatchedMovie = watchedMovieList.length;
+  let totalImdbRating = 0;
+  watchedMovieList.map(movie => Math.round(totalImdbRating += Number(movie.imdbRating)))
+  let totalUserRating = 0;
+  watchedMovieList.map(movie => Math.round(totalUserRating += Number(movie.userRating)))
+  let totalWatchedTime = 0;
+  watchedMovieList.map(movie => Math.round(totalWatchedTime += Number(movie.runtime?.split(' ').at(0))))
 
   function handleSearch(data) {
     setQuery(data);
@@ -82,13 +52,12 @@ function App() {
     setWatchedMovieList(remainingData);
   }
  
-
   return (
-    <div className="bg-gray-900 h-screen py-10">
+    <div className="bg-gray-900 py-10">
       <div className="container mx-auto">
         <Navbar> 
           <Logo />
-          <SearchBox onHandleSearch={handleSearch} />
+          <SearchBox onHandleSearch={handleSearch} setQuery={setQuery} />
           <SearchResult movieLists={movieLists} />
         </Navbar>
 
@@ -113,7 +82,17 @@ function App() {
 
           <Box>
             {
-              selectedId ? <MovieDetails selectedId={selectedId} apiKey={apiKey} onAddWatchedMovie={handleWatchedListMovie} onCloseMovieDetails={handleColseMovieDetails}  /> : <WatchedMovieLists watchedMovieList={watchedMovieList} onDeleteList={handleDeleteMovie} />
+              selectedId ? <MovieDetails 
+                selectedId={selectedId} 
+                apiKey={apiKey} 
+                onAddWatchedMovie={handleWatchedListMovie} onCloseMovieDetails={handleColseMovieDetails} watchedMovieList={watchedMovieList}  
+              /> : <WatchedMovieLists 
+              watchedMovieList={watchedMovieList} 
+              onDeleteList={handleDeleteMovie} 
+              totalImdbRating={totalImdbRating} 
+              totalUserRating={totalUserRating} 
+              totalWatchedTime={totalWatchedTime} 
+              totalWatchedMovie={totalWatchedMovie} />
             }
           </Box>
         </main>

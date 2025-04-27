@@ -34,7 +34,7 @@ export default function Rating({maxLength = 5, onAddUserRating}) {
                     ))
                 }
             </div>
-            <span className="font-bold text-xl">({tempRating || rating || ' '})</span>
+            <span className="font-bold text-xl">({tempRating || rating || '0'})</span>
         </div>
     )
 }

@@ -6,7 +6,7 @@ import Rating from "./Rating";
 import Loading from "./Loading";
 import ErrorMessage from "./ErrorMessage";
 
-export default function MovieDetails({selectedId, apiKey, onAddWatchedMovie, onCloseMovieDetails}) {
+export default function MovieDetails({selectedId, apiKey, onAddWatchedMovie, onCloseMovieDetails, watchedMovieList}) {
 
     const [movieDetails, setMovieDetails] = useState({});
     const [userRating, setUserRating] = useState("");
@@ -15,14 +15,14 @@ export default function MovieDetails({selectedId, apiKey, onAddWatchedMovie, onC
 
     const {Poster:poster, Title:title, Year:year, Actors:actors, Director:director, Genre:genre, Released:released, Runtime:runtime, Plot:plot, imdbRating} = movieDetails;
 
-    // console.log(movieDetails)
+    const alreadyWatched = watchedMovieList.map(movie => movie.imdbId).includes(selectedId)
 
     useEffect(() => {
         async function selectedMovie() {
             try {
                 setIsError(true);
                 setIsError("")
-                const response = await fetch(`http://www.omdbapi.com/?i=${selectedId}&apikey=${apiKey}`);
+                const response = await fetch(`https://corsproxy.io/?http://www.omdbapi.com/?i=${selectedId}&apikey=${apiKey}`);
                 if(!response.ok) throw new Error("Network error: Failed to fetch data")
 
                 const data = await response.json();
@@ -76,10 +76,18 @@ export default function MovieDetails({selectedId, apiKey, onAddWatchedMovie, onC
                     </div>
                 </div>
                 <div className="my-4 bg-gray-600 p-4 rounded text-center">
-                    <Rating onAddUserRating={handleUserRating} />
-                    <div className="flex justify-center">
-                    <button onClick={handleWatchdMovie} className="bg-amber-500 text-gray font-semibold text-center p-3 rounded shadow mt-4 flex items-center gap-1"> <FaPlus /> Add watched list</button>
-                    </div>
+                    {
+                        alreadyWatched ? <p> You already watched this movie </p> : <>
+                        <Rating onAddUserRating={handleUserRating} />
+                        {
+                            userRating > 0 ? <div className="flex justify-center">
+                            <button onClick={handleWatchdMovie} className="bg-amber-500 text-gray font-semibold text-center p-3 rounded shadow mt-4 flex items-center gap-1"> <FaPlus /> Add watched list</button>
+                            </div> : ''
+                        }
+                        </>
+                    }
+                    
+                    
                 </div>
                 <div className="details-info">
                     <p className="text-white italic">{plot}</p>

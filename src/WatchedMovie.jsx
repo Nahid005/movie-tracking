@@ -7,7 +7,7 @@ export default function WatchedMovie({movieList, onDeleteList}) {
     const {poster, imdbRating, userRating, title, runtime, imdbId} = movieList;
 
     return (
-        <li className="flex gap-2 border-b-1 border-b-gray-600 pb-2">
+        <li className="flex gap-2 justify-start border-b-1 border-b-gray-600 pb-2">
             <img className="w-12" src={poster} alt={title} />
             <div className="flex flex-col gap-1">
                 <h4 className="text-white font-semibold mb-2">{title}</h4>
@@ -17,7 +17,7 @@ export default function WatchedMovie({movieList, onDeleteList}) {
                     <span className="flex items-center text-white gap-1 font-semibold"><MdOutlineTimer /> {runtime}</span>
                 </div>
             </div>
-            <button onClick={() => onDeleteList(imdbId)} className="text-red-700 text-xl cursor-pointer"><TiDeleteOutline/></button>
+            <button onClick={() => onDeleteList(imdbId)} className="text-red-700 text-xl cursor-pointer text-right"><TiDeleteOutline/></button>
         </li>
     )
 }
